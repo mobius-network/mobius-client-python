@@ -16,7 +16,8 @@ class Token(object):
         self.address = address
         self.keypair = self.keypair()
         self.user_keypair = self.user_keypair()
-
+        self.time_bounds()
+        
     def time_bounds(self):
         self.bounds = self.tx.time_bounds
 

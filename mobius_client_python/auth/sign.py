@@ -20,7 +20,7 @@ class Sign(object):
 
         te.sign(keypair)
 
-        return te.xdr()
+        return te.xdr().decode()
 
     def keypair(self):
         return Keypair.from_seed(self.user_secret)

@@ -12,7 +12,7 @@ class App(object):
     def authorized(self):
         return self.user_account.authorized(self.app_keypair())
 
-    def app_account(self):
+    def app_accqount(self):
         return self.app_account
 
     def app_balance(self):
@@ -37,16 +37,23 @@ class App(object):
         if not keypair:
             keypair = self.user_account.keypair
         return keypair
+
     def charge(self, amount, destination=None):
         if self.user_balance() < float(amount):
             raise Exception('Insufficient Funds')
 
-        tx = self.submit_tx()
+        te = self.build_te()
 
         if destination:
-            return tx.add_operation(self.app_payment_op(amount,destination))
+            te.tx.add_operation(self.app_payment_op(amount,destination))
         else:
-            return tx.add_operation(self.user_payment_op(amount,self.app_keypair().address().decode()))
+            te.tx.add_operation(self.user_payment_op(amount,self.app_keypair().address().decode()))
+
+        te.sign(self.app_keypair())
+
+        self.submit_tx(te)
+
+        return te
 
     def payout(self, amount, asset, destination=None):
 
@@ -56,29 +63,44 @@ class App(object):
         if self.app_balance(asset) < float(amount):
             raise Exception('Insufficient Funds')
 
-        tx = self.submit_tx()
+        te = self.build_te()
 
-        return tx.add_operation(self.app_payment_op(amount,destination))
+        te.tx.add_operation(self.app_payment_op(amount,destination))
+
+        te.sign(self.app_keypair())
+
+        self.submit_tx(te)
+
+        return te
 
     def transfer(self, amount, destination):
         if self.user_balance() < float(amount):
             raise Exception('Insufficient Funds')
 
-        tx = self.submit_tx()
-        return tx.add_operation(self.user_payment_op(amount,destination))
+        te = self.build_te()
 
-    def submit_tx(self):
-        builder = Builder(address=self.user_account.get_info()['account_id'])
-
-        te = builder.gen_te()
+        te.tx.add_operation(self.user_payment_op(amount,destination))
 
         te.sign(self.app_keypair())
 
-        response = self.client_instance.submit(te)
+        self.submit_tx(te)
+
+        return te
+
+    def build_te(self):
+        builder = Builder(address=self.user_account.get_info()['account_id'])
+        te = builder.gen_te()
+
+        return te
+
+
+    def submit_tx(self, te):
+
+        response = self.client_instance.submit(te.xdr().decode())
 
         self.reload()
 
-        return te.tx
+        return te
 
     def reload(self):
         return self.app_account.reload() and self.user_account.reload()
@@ -86,14 +108,14 @@ class App(object):
 
     def user_payment_op(self, amount, destination):
         return Payment(opts={'destination': destination,
-                             'amount': amount,
+                             'amount': str(amount),
                              'asset': Client().get_stellar_asset(),
                              'source': self.user_keypair().address().decode()
                              })
 
     def app_payment_op(self, amount, destination):
         return Payment(opts={'destination': destination,
-                             'amount': amount,
+                             'amount': str(amount),
                              'asset': Client().get_stellar_asset(),
                              'source': self.app_keypair().address().decode()
                             })

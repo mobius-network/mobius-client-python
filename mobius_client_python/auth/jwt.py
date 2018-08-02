@@ -16,4 +16,4 @@ class Jwt(object):
         return jwt.encode(payload,self.secret,self.ALG)
 
     def decode(self, value):
-        return jwt.decode(value.decode(),self.secret,algorithms=[self.ALG])
+        return jwt.decode(value,self.secret,algorithms=[self.ALG])
