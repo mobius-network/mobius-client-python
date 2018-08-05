@@ -12,11 +12,11 @@ class App(object):
     def authorized(self):
         return self.user_account.authorized(self.app_keypair())
 
-    def app_accqount(self):
+    def app_account(self):
         return self.app_account
 
-    def app_balance(self):
-        return self.app_account.balance()
+    def app_balance(self,asset):
+        return self.app_account.balance(asset)
 
     def app_keypair(self):
         keypair = self.app_account.get_keypair()
