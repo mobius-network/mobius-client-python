@@ -35,13 +35,8 @@ from mobius_client_python.utils.keypair import verify # working
 # Won't work with TextMemo(), currently using NoneMemo()
 
 # User/Dev keypair
-user_keypair = Keypair.random()
-dev_keypair = Keypair.random()
-
-# FriendBot
-f = FriendBot()
-user_created = f.call(user_keypair)
-dev_created = f.call(dev_keypair)
+user_keypair = Keypair.from_seed("SDF6ZKKYYW3PUSOUI7WO2P4ZDFJBG3BCVKOZ7PRKGX7T2ONWC6AUGPZZ")
+dev_keypair = Keypair.from_seed("SB3FSSXYPLXG5HXZONRZRUETQAHWHHSU2CDYDA2DCAZYBLRM6FJQ5KIZ")
 
 # Trustline
 trust_line_dev = CreateTrustline().call(keypair=dev_keypair)
@@ -53,7 +48,18 @@ cosig = AddCosigner().call(keypair=user_keypair, cosigner_keypair=dev_keypair)
 # App
 app = AppBuilder().build(dev_keypair.seed(),user_keypair.address().decode())
 
-app.charge(amount=0.01)
+client = Client()
+
+asset = client.get_stellar_asset()
+
+print('|  user  |  dev  |')
+
+
+print(app.user_balance(),app.app_balance(asset))
+
+app.payout(amount=1,asset=asset)
+
+print(app.user_balance(),app.app_balance(asset))
 
 # Challenge
 challenge_te_xdr = Challenge(developer_secret=dev_keypair.seed(),
