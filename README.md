@@ -65,7 +65,7 @@ Note: the challenge transaction also has time bounds to restrict the time window
 See demo at:
 
 ```bash
-$ git clone git@github.com/mobius-network/mobius-client-python.git
+$ git clone https://github.com/mobius-network/mobius-client-python.git
 
 $ cd mobius-client-python
 
