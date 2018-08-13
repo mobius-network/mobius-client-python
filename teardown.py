@@ -46,9 +46,13 @@ trust_line_user = CreateTrustline().call(keypair=user_keypair)
 cosig = AddCosigner().call(keypair=user_keypair, cosigner_keypair=dev_keypair)
 
 # App
-app = AppBuilder().build(dev_keypair.seed(),user_keypair.address().decode())
+app = AppBuilder().build(dev_keypair.seed(),user_keypair.address().decode(),network='TESTNET')
 
 client = Client()
+
+mobius = Client().network
+mobius = Client().stellar_asset
+mobius = Client().horizon_client
 
 asset = client.get_stellar_asset()
 

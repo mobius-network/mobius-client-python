@@ -4,10 +4,10 @@ from stellar_base.operation import Payment
 from ..client import Client
 
 class App(object):
-    def __init__(self, app_account, user_account):
+    def __init__(self, app_account, user_account, network=None):
         self.app_account = app_account
         self.user_account = user_account
-        self.client_instance = Client().get_horizon_client()
+        self.client_instance = Client(network).get_horizon_client()
 
     def authorized(self):
         return self.user_account.authorized(self.app_keypair())

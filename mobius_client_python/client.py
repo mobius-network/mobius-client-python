@@ -22,7 +22,7 @@ class Client(object):
     def __init__(self, network=None):
         self.stellar_asset = None
         self.horizon_client = None
-        if network == None:
+        if network == None or network == 'TESTNET':
             self.network = Network(NETWORKS['TESTNET'])
         else:
             self.network = Network(NETWORKS['PUBLIC'])
