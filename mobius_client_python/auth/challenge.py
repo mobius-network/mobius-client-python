@@ -10,11 +10,13 @@ import math
 import random
 import datetime
 
+
 # Helper object for timestamps
 class Time(object):
     def __init__(self, min_time=0, max_time=0):
         self.minTime = int(min_time)
         self.maxTime = int(max_time)
+
 
 # Generates challenge transaction on developer's side.
 class Challenge(object):
@@ -30,7 +32,8 @@ class Challenge(object):
         keypair = self.keypair()
 
         builder = Builder(address=keypair.address().decode(),
-                          sequence=self.random_sequence())
+                          sequence=self.random_sequence(),
+                          secret=keypair.seed())
 
         builder.add_memo(self.memo())
         builder.add_time_bounds(self.build_time_bounds())
@@ -38,7 +41,7 @@ class Challenge(object):
         builder.append_payment_op(source=Keypair.random(),
                                   destination=keypair.address().decode(),
                                   amount='0.000001')
-        builder.sign(keypair.seed())
+        builder.sign()
 
         te = builder.gen_te()
 
