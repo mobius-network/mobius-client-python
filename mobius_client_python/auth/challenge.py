@@ -35,6 +35,8 @@ class Challenge(object):
                           sequence=self.random_sequence(),
                           secret=keypair.seed())
 
+        builder.sign()
+
         builder.add_memo(self.memo())
         builder.add_time_bounds(self.build_time_bounds())
 
