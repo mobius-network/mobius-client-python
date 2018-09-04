@@ -25,7 +25,7 @@ An overview of the DApp Store architecture is:
 Using pip or easy install:
 
 ```sh
-$ pip install mobius-client-python
+$ pip install mobius-client
 ```
 
 or
