@@ -44,7 +44,7 @@ class Client(object):
         if self.stellar_asset:
             return self.stellar_asset
 
-        stellar_asset = Asset(self.asset_code,self.get_asset_issuer())
+        stellar_asset = Asset(self.asset_code, self.get_asset_issuer())
         self.stellar_asset = stellar_asset
 
         return self.stellar_asset
